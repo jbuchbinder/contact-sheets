@@ -19,6 +19,7 @@ var (
 	Rows       = flag.Int("rows", 6, "Number of rows of thumbnails")
 	Cols       = flag.Int("cols", 7, "Number of columns of thumbnails")
 	ThumbX     = flag.Int("thumb-x", 300, "Thumbnail X size")
+	DcRaw      = flag.String("dcraw", "dcraw", "Path to dcraw executable for this syste,")
 
 	font *truetype.Font
 )
