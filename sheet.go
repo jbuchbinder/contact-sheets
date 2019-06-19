@@ -5,7 +5,9 @@ import (
 	"image"
 	"image/color"
 	"log"
+	"os"
 	"path"
+	"strings"
 
 	"github.com/disintegration/imaging"
 )
@@ -63,10 +65,16 @@ func SheetFromFiles(files []string) (image.Image, error) {
 		)
 		log.Printf("Text bounds: %s : %#v", path.Base(files[i]), bounds)
 
+		fn := path.Base(files[i])
+		if os.PathSeparator == '\\' {
+			lastSlash := strings.LastIndex(fn, string(os.PathSeparator))
+			fn = fn[lastSlash+1:]
+		}
+
 		addLabel(dst,
 			*Gap+(*ThumbX*col)+(col**Gap)+(*Gap*2),
 			*Gap+(*ThumbX*row)+(row*(*Gap+*TextHeight+*Gap))+*ThumbX+*Gap,
-			path.Base(files[i]))
+			fn)
 
 	}
 
