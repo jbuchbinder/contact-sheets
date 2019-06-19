@@ -35,7 +35,7 @@
     "tiff/lzw",
   ]
   pruneopts = "UT"
-  revision = "33659d3de4f578c2f0c64af782d17fa8688d643f"
+  revision = "92942e4437e2b065806587df0f5d8afa565a8567"
 
 [solve-meta]
   analyzer-name = "dep"

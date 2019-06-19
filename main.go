@@ -3,25 +3,23 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"path/filepath"
 
 	"github.com/disintegration/imaging"
-	"github.com/golang/freetype"
-	"github.com/golang/freetype/truetype"
 )
 
 var (
 	Out        = flag.String("out", "sheets-%03d.jpg", "Output template")
 	Gap        = flag.Int("gap", 20, "Gap between thumbnails in px")
-	Font       = flag.String("font", "font.ttf", "Font file name")
 	TextHeight = flag.Int("text-height", 10, "Height of text in px")
 	Rows       = flag.Int("rows", 6, "Number of rows of thumbnails")
 	Cols       = flag.Int("cols", 7, "Number of columns of thumbnails")
 	ThumbX     = flag.Int("thumb-x", 300, "Thumbnail X size")
 	DcRaw      = flag.String("dcraw", dcraw, "Path to dcraw executable for this syste,")
 
-	font *truetype.Font
+	//Font       = flag.String("font", "font.ttf", "Font file name")
+	//font *truetype.Font
 )
 
 func main() {
@@ -38,15 +36,25 @@ func main() {
 		panic("No images to process")
 	}
 
-	// Read the font data.
-	fontBytes, err := ioutil.ReadFile(*Font)
-	if err != nil {
-		panic(err)
+	/*
+		// Read the font data.
+		fontBytes, err := ioutil.ReadFile(*Font)
+		if err != nil {
+			panic(err)
+		}
+		font, err = freetype.ParseFont(fontBytes)
+		if err != nil {
+			panic(err)
+		}
+	*/
+
+	// Resolve files
+	x := []string{}
+	for i := range files {
+		matches, _ := filepath.Glob(files[i])
+		x = append(x, matches...)
 	}
-	font, err = freetype.ParseFont(fontBytes)
-	if err != nil {
-		panic(err)
-	}
+	files = x
 
 	// Split into image batches of 7w x 6h
 	batches := int(len(files)/(*Rows**Cols)) + 1
