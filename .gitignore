@@ -1,1 +1,4 @@
 contact-sheets
+*.exe
+*.7z
+go.sum
