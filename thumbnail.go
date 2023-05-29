@@ -15,7 +15,9 @@ import (
 
 // ThumbnailFromFile returns a ThumbX*ThumbX bounded image thumbnail
 func ThumbnailFromFile(fn string) (image.Image, error) {
-	log.Printf("ThumbnailFromFile(%s)", fn)
+	if !*Progress {
+		log.Printf("ThumbnailFromFile(%s)", fn)
+	}
 
 	realFn := fn
 

@@ -10,10 +10,11 @@ import (
 	"strings"
 
 	"github.com/disintegration/imaging"
+	"github.com/schollz/progressbar/v3"
 )
 
 // SheetFromFiles creates a contact sheet for a list of files
-func SheetFromFiles(files []string) (image.Image, error) {
+func SheetFromFiles(files []string, pb *progressbar.ProgressBar) (image.Image, error) {
 	dst := imaging.New(
 		((*ThumbX+*Gap)*7)+*Gap,                         // gap on side
 		((*ThumbX + *Gap + *TextHeight + *Gap) * *Rows), // gap on top, label, gap on bottom
@@ -43,12 +44,14 @@ func SheetFromFiles(files []string) (image.Image, error) {
 		}
 
 		// Composite image in position
-		log.Printf("Pasting image size %d x %d at %d:%d with offsets %d/%d at pos %d/%d",
-			img.Bounds().Dx(), img.Bounds().Dy(),
-			row, col,
-			widthOffset, heightOffset,
-			*Gap+(*ThumbX*col)+(col**Gap)+widthOffset,
-			*Gap+(*ThumbX*row)+(row*(*Gap+*TextHeight+*Gap))+heightOffset)
+		if !*Progress {
+			log.Printf("Pasting image size %d x %d at %d:%d with offsets %d/%d at pos %d/%d",
+				img.Bounds().Dx(), img.Bounds().Dy(),
+				row, col,
+				widthOffset, heightOffset,
+				*Gap+(*ThumbX*col)+(col**Gap)+widthOffset,
+				*Gap+(*ThumbX*row)+(row*(*Gap+*TextHeight+*Gap))+heightOffset)
+		}
 		dst = imaging.Paste(dst,
 			img,
 			image.Pt(
@@ -63,7 +66,9 @@ func SheetFromFiles(files []string) (image.Image, error) {
 			*Gap+(*ThumbX*col)+(col**Gap)+*ThumbX+*Gap,
 			*Gap+(*ThumbX*row)+(row*(*Gap+*TextHeight+*Gap))+*ThumbX+*Gap,
 		)
-		log.Printf("Text bounds: %s : %#v", path.Base(files[i]), bounds)
+		if !*Progress {
+			log.Printf("Text bounds: %s : %#v", path.Base(files[i]), bounds)
+		}
 
 		fn := path.Base(files[i])
 		if os.PathSeparator == '\\' {
@@ -76,6 +81,9 @@ func SheetFromFiles(files []string) (image.Image, error) {
 			*Gap+(*ThumbX*row)+(row*(*Gap+*TextHeight+*Gap))+*ThumbX+*Gap,
 			fn)
 
+		if pb != nil {
+			pb.Add(1)
+		}
 	}
 
 	return dst, nil
