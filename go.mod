@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/schollz/progressbar/v3 v3.14.1
-	golang.org/x/image v0.15.0
+	golang.org/x/image v0.18.0
 )
 
 require (
