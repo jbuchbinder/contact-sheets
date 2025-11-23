@@ -19,16 +19,23 @@ func ThumbnailFromFile(fn string) (image.Image, error) {
 		log.Printf("ThumbnailFromFile(%s)", fn)
 	}
 
+	rawExtensions := []string{
+		".CR2",
+		".DNG",
+		".NEF",
+		".RW2",
+	}
+
 	realFn := fn
 
-	if strings.HasSuffix(fn, ".CR2") ||
-		strings.HasSuffix(fn, ".DNG") ||
-		strings.HasSuffix(fn, ".NEF") {
-		realFn = os.TempDir() + string(os.PathSeparator) + path.Base(fn) + ".jpg"
-		err := ExtractThumbnailFromRaw(fn, realFn)
-		defer os.Remove(realFn)
-		if err != nil {
-			return nil, err
+	for _, v := range rawExtensions {
+		if strings.HasSuffix(fn, v) {
+			realFn = os.TempDir() + string(os.PathSeparator) + path.Base(fn) + ".jpg"
+			err := ExtractThumbnailFromRaw(fn, realFn)
+			defer os.Remove(realFn)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
